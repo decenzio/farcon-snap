@@ -1,7 +1,5 @@
 import { Hono } from "hono";
 import { registerSnapHandler } from "@farcaster/snap-hono";
-import { createTursoDataStore } from "@farcaster/snap-turso";
-import type { DataStoreValue } from "@farcaster/snap-turso";
 import type { Event, SnapHandlerResult } from "./types.js";
 import { getBaseUrl, generateId } from "./helpers.js";
 import { createPage } from "./pages/create.js";
@@ -9,7 +7,11 @@ import { eventPage } from "./pages/event.js";
 import { nominatePage } from "./pages/nominate.js";
 import { createdPage } from "./pages/created.js";
 
-const store = createTursoDataStore();
+const mem = new Map<string, unknown>();
+const store = {
+  get: async (key: string) => mem.get(key) ?? null,
+  set: async (key: string, value: unknown) => { mem.set(key, value); },
+};
 
 const app = new Hono();
 
@@ -70,7 +72,7 @@ registerSnapHandler(app, async (ctx) => {
       attendees: [fid],
       nominations: [],
     };
-    await store.set(`event:${id}`, event as unknown as DataStoreValue);
+    await store.set(`event:${id}`, event);
     return createdPage(event, base);
   }
 
@@ -81,7 +83,7 @@ registerSnapHandler(app, async (ctx) => {
   if (action === "join") {
     if (!event.attendees.includes(fid)) {
       event.attendees.push(fid);
-      await store.set(`event:${eventId}`, event as unknown as DataStoreValue);
+      await store.set(`event:${eventId}`, event);
     }
     return eventPage(event, "joined", base);
   }
@@ -98,7 +100,7 @@ registerSnapHandler(app, async (ctx) => {
     );
     if (!already) {
       event.nominations.push({ nominatorFid: fid, username });
-      await store.set(`event:${eventId}`, event as unknown as DataStoreValue);
+      await store.set(`event:${eventId}`, event);
     }
     return eventPage(event, "nominated", base);
   }

@@ -10,7 +10,6 @@
   "dependencies": {
     "@farcaster/snap": "latest",
     "@farcaster/snap-hono": "latest",
-    "@farcaster/snap-turso": "latest",
     "@hono/node-server": "^1.13.2",
     "hono": "^4.6.14"
   },
