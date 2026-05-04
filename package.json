@@ -1,0 +1,22 @@
+{
+  "name": "whos-in-snap",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "SKIP_JFS_VERIFICATION=1 tsx watch src/index.ts",
+    "typecheck": "tsc --noEmit",
+    "start": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "@farcaster/snap": "latest",
+    "@farcaster/snap-hono": "latest",
+    "@farcaster/snap-turso": "latest",
+    "@hono/node-server": "^1.13.2",
+    "hono": "^4.6.14"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
