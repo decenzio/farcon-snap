@@ -29,6 +29,9 @@ pnpm-debug.log*
 # vercel
 .vercel/
 
+# MCP — may contain OAuth tokens written by the client
+.mcp.json.local
+
 # turso / local data
 *.db
 *.db-journal
